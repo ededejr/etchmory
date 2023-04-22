@@ -4,7 +4,11 @@
   "description": "utilities for repeatable execution cycles",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "prettier --check .",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
