@@ -47,7 +47,6 @@ export class Etchmory {
     return this.source[decision];
   }
 
-
   /**
    * Get the results of a decision during an execution cycle in the order which they
    * were produced.
