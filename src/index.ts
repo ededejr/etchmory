@@ -1,7 +1,11 @@
 /**
+ * The result of a decision made during an execution cycle.
+ */
+type SourceValue = string | number;
+/**
  * An object which contains decisions made during an execution cycle.
  */
-type Source = Record<string, string | number>;
+type Source = Record<string, SourceValue>;
 
 /**
  * Tracks decisions made during an execution cycle.
@@ -20,7 +24,7 @@ export class Etchmory {
    * @param decision
    * @param value
    */
-  public mark(decision: string, value: string | number) {
+  public mark(decision: string, value: SourceValue) {
     if (!this.isRunning) {
       this.reportError(new Error('Cannot mark due to instance not being in the active state'));
     }
