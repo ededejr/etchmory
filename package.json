@@ -1,0 +1,30 @@
+{
+  "name": "@ededejr/etchmory",
+  "version": "0.0.1",
+  "description": "utilities for repeatable execution cycles",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ededejr/etchmory.git"
+  },
+  "keywords": [
+    "generative-art",
+    "tokens"
+  ],
+  "author": "@ededejr",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/ededejr/etchmory/issues"
+  },
+  "homepage": "https://github.com/ededejr/etchmory#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.7",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  }
+}
