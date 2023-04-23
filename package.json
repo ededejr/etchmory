@@ -4,13 +4,17 @@
   "description": "utilities for repeatable execution cycles",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "lint": "prettier --check .",
+    "package:build": "tsup --format cjs,esm && npm run package:prepare",
+    "package:prepare": "ts-node ./scripts/prepare-package-dist.ts",
+    "release": "release-it",
+    "release:minor": "release-it --minor",
+    "release:major": "release-it --major",
+    "release:patch": "release-it --patch",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch",
-    "lint": "prettier --check .",
-    "build": "tsc",
-    "build:package": "tsup --format cjs,esm && npm run copy:package",
-    "copy:package": "ts-node ./scripts/prepare-package-dist.ts"
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -27,9 +31,11 @@
   },
   "homepage": "https://github.com/ededejr/etchmory#readme",
   "devDependencies": {
+    "@release-it/conventional-changelog": "^5.1.1",
     "@types/jest": "^29.5.1",
     "jest": "^29.5.0",
     "prettier": "^2.8.7",
+    "release-it": "^15.10.1",
     "terser": "^5.17.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
@@ -48,5 +54,38 @@
       "compress": true,
       "mangle": true
     }
+  },
+  "release-it": {
+    "git": {
+      "commit": true,
+      "commitMessage": "chore(release): release v${version}",
+      "changelog": "git log --pretty=format:\"* %s (%h)\" ${from}...${to}",
+      "tagAnnotation": "Release v${version}"
+    },
+    "npm": {
+      "publish": false,
+      "publishPath": "./dist"
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md"
+      }
+    },
+    "hooks": {
+      "before:init": [
+        "npm run test",
+        "npm run package:build"
+      ],
+      "after:release": "npm publish ./dist"
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
   }
 }
