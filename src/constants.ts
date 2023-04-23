@@ -1,1 +1,1 @@
-export const ERROR_PREFIX = '[Etchmory] ';
+export const ERROR_PREFIX = "[Etchmory]";
