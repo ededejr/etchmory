@@ -1,11 +1,5 @@
-/**
- * The result of a decision made during an execution cycle.
- */
-type SourceValue = string | number | boolean;
-/**
- * An object which contains decisions made during an execution cycle.
- */
-type Source = Record<string, SourceValue>;
+import { Source, SourceValue } from "./types";
+import { throwError } from "./utils";
 
 /**
  * Tracks decisions made during an execution cycle.
@@ -13,7 +7,6 @@ type Source = Record<string, SourceValue>;
 export class Etchmory {
   private source: Source = {};
   private isRunning = false;
-  private errorPrefix = '[Etchmory] ';
 
   constructor() {
     this.isRunning = true;
@@ -26,11 +19,11 @@ export class Etchmory {
    */
   public mark(decision: string, value: SourceValue) {
     if (!this.isRunning) {
-      this.reportError(new Error('Cannot mark due to instance not being in the active state'));
+      throwError(new Error('Cannot mark due to instance not being in the active state'));
     }
 
     if (this.source[decision] !== undefined) {
-      this.reportError(new Error(`Decision "${decision}" already exists`));
+      throwError(new Error(`Decision "${decision}" already exists`));
     }
 
     this.source[decision] = value;
@@ -41,11 +34,11 @@ export class Etchmory {
    */
   public recall(decision: string) {
     if (this.isRunning) {
-      this.reportError(new Error('Instance must be completed before a repeatable value can be guaranteed.'));
+      throwError(new Error('Instance must be completed before a repeatable value can be guaranteed.'));
     }
 
     if (this.source[decision] === undefined) {
-      this.reportError(new Error(`Decision "${decision}" does not exist`));
+      throwError(new Error(`Decision "${decision}" does not exist`));
     }
 
     return this.source[decision];
@@ -57,7 +50,7 @@ export class Etchmory {
    */
   public replay() {
     if (this.isRunning) {
-      this.reportError(new Error('Instance must be completed before repeatable replaces can be guaranteed.'));
+      throwError(new Error('Instance must be completed before repeatable replaces can be guaranteed.'));
     }
 
     const createIterator = function *iterator() {
@@ -76,12 +69,6 @@ export class Etchmory {
     this.isRunning = false;
     return Object.values(this.source).join(':');
   }
-
-  private reportError(err: Error) {
-    const formattedError = new Error(`${this.errorPrefix} ${err.message}`);
-    formattedError.stack = err.stack;
-    throw formattedError;
-  }
 }
 
 /**
@@ -91,8 +78,27 @@ export function parseToken(token: string) {
   const source = token.split(':');
   const memory = new Etchmory();
   source.forEach((value, index) => {
-    memory.mark(`${index}`, value);
+    memory.mark(`${index}`, coerceValue(value));
   });
   memory.complete();
   return memory;
+}
+
+/**
+ * Coerces a string value into a SourceValue.
+ */
+function coerceValue(value: string): SourceValue {
+  const isBoolean = ['true', 'false'].includes(value);
+
+  if (isBoolean) {
+    return value === 'true';
+  }
+
+  const isNumber = !isNaN(Number(value));
+
+  if (isNumber) {
+    return Number(value);
+  }
+
+  return value;
 }
