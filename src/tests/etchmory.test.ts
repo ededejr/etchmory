@@ -11,7 +11,7 @@ describe('Etchmory', () => {
       const memory = new Etchmory();
       memory.mark('decision_1', 'value_1');
       memory.complete();
-      expect(memory.get('decision_1')).toBe('value_1');
+      expect(memory.recall('decision_1')).toBe('value_1');
     });
   
     test('can mark multiple decisions', () => {
@@ -19,8 +19,8 @@ describe('Etchmory', () => {
       memory.mark('decision_1', 'value_1');
       memory.mark('decision_2', 'value_2');
       memory.complete();
-      expect(memory.get('decision_1')).toBe('value_1');
-      expect(memory.get('decision_2')).toBe('value_2');
+      expect(memory.recall('decision_1')).toBe('value_1');
+      expect(memory.recall('decision_2')).toBe('value_2');
     });
   
     test('can replay decisions in order', () => {
@@ -28,9 +28,9 @@ describe('Etchmory', () => {
       memory.mark('decision_1', 'value_1');
       memory.mark('decision_2', 'value_2');
       memory.complete();
-      const iterator = memory.replay();
-      expect(iterator.next().value).toBe('value_1');
-      expect(iterator.next().value).toBe('value_2');
+      const decisions = memory.replay();
+      expect(decisions.next().value).toBe('value_1');
+      expect(decisions.next().value).toBe('value_2');
     });
   
     test('can complete', () => {
@@ -46,7 +46,7 @@ describe('Etchmory', () => {
       const memory = new Etchmory();
       memory.mark('decision_1', 'value_1');
       memory.mark('decision_2', 'value_2');
-      expect(() => memory.get('decision_1')).toThrowError('[Etchmory]  Instance must be completed before a repeatable value can be guaranteed');
+      expect(() => memory.recall('decision_1')).toThrowError('[Etchmory]  Instance must be completed before a repeatable value can be guaranteed');
     });
   
     test('throws error if mark is called after complete', () => {
@@ -61,7 +61,7 @@ describe('Etchmory', () => {
       const memory = new Etchmory();
       memory.mark('decision_1', 'value_1');
       memory.mark('decision_2', 'value_2');
-      expect(() => memory.get('decision_1')).toThrowError('[Etchmory]  Instance must be completed before a repeatable value can be guaranteed.');
+      expect(() => memory.recall('decision_1')).toThrowError('[Etchmory]  Instance must be completed before a repeatable value can be guaranteed.');
     });
   })
 });

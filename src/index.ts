@@ -1,7 +1,7 @@
 /**
  * The result of a decision made during an execution cycle.
  */
-type SourceValue = string | number;
+type SourceValue = string | number | boolean;
 /**
  * An object which contains decisions made during an execution cycle.
  */
@@ -39,7 +39,7 @@ export class Etchmory {
   /**
    * Get the result of a decision during an execution cycle.
    */
-  public get(decision: string) {
+  public recall(decision: string) {
     if (this.isRunning) {
       this.reportError(new Error('Instance must be completed before a repeatable value can be guaranteed.'));
     }
