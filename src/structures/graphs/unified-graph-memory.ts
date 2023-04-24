@@ -1,11 +1,11 @@
-import { MemoryGraph } from ".";
+import { GraphMemory } from "./graph-memory";
 import { Decision } from "../../types";
 import { throwError } from "../../utils";
 import { Graph, GraphNode } from "./graph";
-import { MemoryGraphNode } from "./memory-graph";
+import { MemoryGraphNode } from "./graph-memory";
 
 /**
- * Combines multiple MemoryGraphs into a single graph where all decisions
+ * Combines multiple GraphMemory instances into a single graph where all decisions
  * are unique at the order in which they are made. The graph structure is
  * representative of possible paths through the execution cycle.
  *
@@ -13,7 +13,7 @@ import { MemoryGraphNode } from "./memory-graph";
  * value. The root node is the start of the execution cycle and a leaf node
  * is the end of the execution cycle.
  */
-export class UnifiedMemoryGraph extends Graph<Decision> {
+export class UnifiedGraphMemory extends Graph<Decision> {
   constructor(json?: string) {
     super();
     if (json) {
@@ -24,7 +24,7 @@ export class UnifiedMemoryGraph extends Graph<Decision> {
   /**
    * Merge a MemoryGraph into this UnifiedMemoryGraph.
    */
-  public merge(graph: MemoryGraph) {
+  public merge(graph: GraphMemory) {
     const sequence = graph.replay();
 
     let current: MemoryGraphNode = this.root;
@@ -97,7 +97,7 @@ export class UnifiedMemoryGraph extends Graph<Decision> {
       );
     }
 
-    const parsed: UnifiedMemoryGraphJSON = JSON.parse(json);
+    const parsed: UnifiedGraphMemoryJSON = JSON.parse(json);
 
     const loadNode = (mgn: MemoryGraphNode) => {
       const node = new GraphNode(mgn.value);
@@ -110,6 +110,6 @@ export class UnifiedMemoryGraph extends Graph<Decision> {
   }
 }
 
-interface UnifiedMemoryGraphJSON {
+interface UnifiedGraphMemoryJSON {
   [key: string]: GraphNode<Decision>;
 }
