@@ -3,10 +3,15 @@ import { throwError } from "../../utils";
 
 /**
  * A standardization of the interface for a memory object.
+ *
+ * A MemoryObject tracks decisions made during an execution cycle.
+ * It is used to store the results of decisions made during an execution cycle
+ * and to replay them in the order they were made.
+ *
  */
 export abstract class MemoryObject {
   protected isActive = true;
-  protected abstract size: number;
+  public abstract readonly size: number;
 
   /**
    * Mark the result of a decision during an execution cycle.
@@ -31,7 +36,11 @@ export abstract class MemoryObject {
     }
 
     if (this.size === 0) {
-      throwError(new Error("Cannot complete an empty instance"));
+      throwError(
+        new Error(
+          "Cannot complete due to instance not having any marked decisions. Please ensure mark() is called before complete()."
+        )
+      );
     }
 
     this.isActive = false;

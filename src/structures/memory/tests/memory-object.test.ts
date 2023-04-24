@@ -6,7 +6,11 @@ describe("MemoryObject", () => {
   let m: TestableMemoryObject;
 
   class TestableMemoryObject extends MemoryObject {
-    protected size = 0;
+    private $size = 0;
+
+    public get size() {
+      return this.$size;
+    }
 
     protected generateToken() {
       generateTokenMock();
@@ -14,7 +18,7 @@ describe("MemoryObject", () => {
     }
 
     public mark() {
-      this.size++;
+      this.$size++;
     }
 
     public recall() {
@@ -45,6 +49,12 @@ describe("MemoryObject", () => {
     m.complete();
     m.getToken();
     expect(generateTokenMock).toHaveBeenCalled();
+  });
+
+  test("cannot complete with no decisions", () => {
+    expect(() => m.complete()).toThrowError(
+      "[Etchmory] Cannot complete due to instance not having any marked decisions. Please ensure mark() is called before complete()."
+    );
   });
 });
 
@@ -82,28 +92,73 @@ export function testMemoryObjectCompliance(
     });
 
     describe("meets implementation requirements", () => {
-      test("can mark a decision", () => {
-        m.mark("decision", "value");
-        m.mark("decision2", "value2");
-        m.complete();
-        expect(m.getToken().length).toBeGreaterThan(0);
-      });
-
-      test("can recall a decision", () => {
-        m.mark("decision", "value");
-        m.complete();
-        expect(m.recall("decision")).toBe("value");
-      });
-
-      test("can replay an execution cycle", () => {
-        m.mark("decision", "value");
-        m.complete();
-        const generator = m.replay();
-        expect(generator.next().value).toEqual({
-          key: "decision",
-          value: "value",
+      describe("mark", () => {
+        test("can mark decision", () => {
+          m.mark("decision", "value");
+          m.mark("decision_2", "value");
+          m.complete();
+          expect(m.getToken().length).toBeGreaterThan(0);
         });
-        expect(generator.next().done).toBe(true);
+
+        test("increments length", () => {
+          m.mark("decision", "value");
+          expect(m.size).toBe(1);
+          m.mark("decision_2", "value");
+          expect(m.size).toBe(2);
+        });
+      });
+
+      describe("recall", () => {
+        test("can recall decision", () => {
+          m.mark("decision", "value");
+          m.complete();
+          expect(m.recall("decision")).toBe("value");
+        });
+
+        test("can recall numbers", () => {
+          m.mark("decision", 1);
+          m.complete();
+          expect(m.recall("decision")).toBe(1);
+        });
+
+        test("can recall booleans", () => {
+          m.mark("decision", true);
+          m.complete();
+          expect(m.recall("decision")).toBe(true);
+        });
+
+        test("throws error if decision does not exist", () => {
+          m.mark("decision", "value");
+          m.complete();
+          expect(() => m.recall("decision_2")).toThrowError(
+            'Decision "decision_2" does not exist'
+          );
+        });
+      });
+
+      describe("replay", () => {
+        test("can replay decisions", () => {
+          m.mark("decision", "value");
+          m.mark("decision_2", "value_2");
+          m.complete();
+          const iterator = m.replay();
+          expect(iterator.next().value).toEqual({
+            key: "decision",
+            value: "value",
+          });
+          expect(iterator.next().value).toEqual({
+            key: "decision_2",
+            value: "value_2",
+          });
+          expect(iterator.next().done).toBe(true);
+        });
+
+        test("returns iterator", () => {
+          m.mark("decision", "value");
+          m.complete();
+          const iterator = m.replay();
+          expect(iterator.next).toBeInstanceOf(Function);
+        });
       });
 
       test("can generate a token", () => {
@@ -147,7 +202,7 @@ export function testMemoryObjectCompliance(
 
       test("should fail if complete is called with size being 0", () => {
         expect(() => m.complete()).toThrowError(
-          "[Etchmory] Cannot complete an empty instance"
+          "[Etchmory] Cannot complete due to instance not having any marked decisions. Please ensure mark() is called before complete()."
         );
       });
 

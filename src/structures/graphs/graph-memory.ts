@@ -1,5 +1,14 @@
+/**
+ * GraphMemory
+ *
+ * Adding a note here to explain the need for both
+ * MemoryGraph and GraphMemory. The MemoryGraph is a light
+ * wrapper around the `Graph`. This is to get around
+ * the fact that the `GraphMemory` cannot inherit from
+ * both interfaces.
+ */
 import { Decision, SourceValue } from "../../types";
-import { throwError } from "../../utils";
+import { MemoryObject } from "../memory/memory-object";
 import { GraphNode, Graph } from "./graph";
 
 export type MemoryGraphNode = GraphNode<Decision>;
@@ -16,10 +25,9 @@ export type MemoryGraphNode = GraphNode<Decision>;
  * Atypically all nodes have a single child node indicating the next decision
  * made during the execution cycle.
  */
-export class MemoryGraph extends Graph<Decision> {
-  public length = 0;
+class MemoryGraph extends Graph<Decision> {
   private current: MemoryGraphNode;
-  private isRunning = true;
+  public size = 0;
 
   constructor() {
     super();
@@ -27,29 +35,13 @@ export class MemoryGraph extends Graph<Decision> {
   }
 
   public mark(decision: string, value: SourceValue) {
-    if (!this.isRunning) {
-      throwError(
-        new Error(
-          "Cannot mark due to instance not being in the active state. Please ensure complete() is not called before marking."
-        )
-      );
-    }
-
     const node = new GraphNode({ key: decision, value });
     this.current.children.push(node);
     this.current = node;
-    this.length++;
+    this.size++;
   }
 
   public recall(decision: string) {
-    if (this.isRunning) {
-      throwError(
-        new Error(
-          "Instance must be completed before a repeatable value can be guaranteed during recall. Please ensure complete() is called before recalling."
-        )
-      );
-    }
-
     const node = this.find((node) => node.value?.key === decision);
     if (!node) {
       throw new Error(`Decision "${decision}" does not exist`);
@@ -58,14 +50,6 @@ export class MemoryGraph extends Graph<Decision> {
   }
 
   public replay(): Iterator<Decision> {
-    if (this.isRunning) {
-      throwError(
-        new Error(
-          "Cannot replay due to instance not being in the active state. Please ensure complete() has been called."
-        )
-      );
-    }
-
     let generator = function* generator() {
       let current: MemoryGraphNode = this.root;
 
@@ -80,26 +64,6 @@ export class MemoryGraph extends Graph<Decision> {
     return generator();
   }
 
-  public complete() {
-    if (!this.isRunning) {
-      throwError(
-        new Error(
-          "Cannot complete due to instance not being in the active state. Please ensure complete() is not called more than once."
-        )
-      );
-    }
-
-    if (this.length === 0) {
-      throwError(
-        new Error(
-          "Cannot complete due to instance not having any marked decisions. Please ensure mark() is called before complete()."
-        )
-      );
-    }
-
-    this.isRunning = false;
-  }
-
   public display() {
     let output = "";
     this.traverse(this.root, (node) => {
@@ -108,5 +72,51 @@ export class MemoryGraph extends Graph<Decision> {
       }${node.children.length > 0 ? "\n⇣" : ""}\n`;
     });
     return output;
+  }
+
+  public toJSON() {
+    return JSON.stringify(this.root);
+  }
+}
+
+/**
+ * GraphMemory is a MemoryObject compliant graph that tracks decisions
+ * made during an execution cycle. It is used to store the results of decisions
+ * made during an execution cycle
+ * and to replay them in the order they were made.
+ *
+ * The graph is a tree structure where each node represents a decision and its
+ * value. The root node is the start of the execution cycle and the leaf node
+ * is the end of the execution cycle.
+ *
+ * Atypically all nodes have a single child node indicating the next decision
+ * made during the execution cycle.
+ */
+export class GraphMemory extends MemoryObject {
+  private graph = new MemoryGraph();
+
+  public get size() {
+    return this.graph.size;
+  }
+
+  public mark(decision: string, value: SourceValue) {
+    this.ensureIsActive();
+    this.graph.mark(decision, value);
+  }
+
+  public recall(decision: string) {
+    this.ensureIsComplete();
+    return this.graph.recall(decision);
+  }
+
+  public replay(): Iterator<Decision> {
+    this.ensureIsComplete();
+    return this.graph.replay();
+  }
+
+  protected onCompletion(): void {}
+
+  protected generateToken(): string {
+    return `gm::${this.graph.toJSON()}`;
   }
 }

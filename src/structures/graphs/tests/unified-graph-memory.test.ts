@@ -1,30 +1,30 @@
-import { MemoryGraph, UnifiedMemoryGraph } from "..";
+import { GraphMemory, UnifiedGraphMemory } from "..";
 
 describe("UnifiedMemoryGraph", () => {
-  function makeUnifiedMemoryGraph() {
-    const unified = new UnifiedMemoryGraph();
+  function makeUnifiedGraphMemory() {
+    const unified = new UnifiedGraphMemory();
 
-    const one = new MemoryGraph();
+    const one = new GraphMemory();
     one.mark("a", "value");
     one.mark("b", "value_2");
     one.mark("c", "value_4");
     one.complete();
 
-    const two = new MemoryGraph();
+    const two = new GraphMemory();
     two.mark("g", "value");
     two.mark("r", "value_2");
     two.mark("a", "value_3");
     two.mark("f", "value_4");
     two.complete();
 
-    const three = new MemoryGraph();
+    const three = new GraphMemory();
     three.mark("d", "value");
     three.mark("a", "value_2");
     three.mark("n", "value_3");
     three.mark("e", "value_4");
     three.complete();
 
-    const four = new MemoryGraph();
+    const four = new GraphMemory();
     four.mark("d", "value");
     four.mark("g", "value_2");
     four.mark("b", "value_3");
@@ -41,7 +41,7 @@ describe("UnifiedMemoryGraph", () => {
 
   describe("toJSON", () => {
     test("can convert to JSON", () => {
-      const unified = makeUnifiedMemoryGraph();
+      const unified = makeUnifiedGraphMemory();
       const json = unified.toJSON();
       expect(json).toMatchSnapshot();
     });
@@ -49,9 +49,9 @@ describe("UnifiedMemoryGraph", () => {
 
   describe("importJSON", () => {
     test("can create instance from JSON representation", () => {
-      const initial = makeUnifiedMemoryGraph();
+      const initial = makeUnifiedGraphMemory();
       const json = initial.toJSON();
-      const copy = new UnifiedMemoryGraph(json);
+      const copy = new UnifiedGraphMemory(json);
       expect(copy.toJSON()).toBe(json);
     });
   });
