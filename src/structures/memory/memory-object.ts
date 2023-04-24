@@ -58,7 +58,7 @@ export abstract class MemoryObject {
    * This is useful for cleaning up any resources which are no longer needed.
    * This is invoked before transitioning the `isActive` state.
    */
-  protected abstract onCompletion?(): void;
+  protected abstract onCompletion(): void;
 
   protected ensureIsComplete() {
     if (this.isActive) {

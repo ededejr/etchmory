@@ -1,5 +1,53 @@
 import { MemoryObject } from "../memory-object";
 
+describe("MemoryObject", () => {
+  let onCompletionMock: jest.Mock;
+  let generateTokenMock: jest.Mock;
+  let m: TestableMemoryObject;
+
+  class TestableMemoryObject extends MemoryObject {
+    protected size = 0;
+
+    protected generateToken() {
+      generateTokenMock();
+      return "";
+    }
+
+    public mark() {
+      this.size++;
+    }
+
+    public recall() {
+      return "";
+    }
+    public replay() {
+      return {} as any;
+    }
+    protected onCompletion() {
+      onCompletionMock();
+    }
+  }
+
+  beforeEach(() => {
+    onCompletionMock = jest.fn();
+    generateTokenMock = jest.fn();
+    m = new TestableMemoryObject();
+  });
+
+  test("calls onCompletion when complete is called", () => {
+    m.mark();
+    m.complete();
+    expect(onCompletionMock).toHaveBeenCalled();
+  });
+
+  test("calls generateToken when getToken is called", () => {
+    m.mark();
+    m.complete();
+    m.getToken();
+    expect(generateTokenMock).toHaveBeenCalled();
+  });
+});
+
 export function testMemoryObjectCompliance(
   name: string,
   createObject: () => MemoryObject
