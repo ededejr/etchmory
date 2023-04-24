@@ -22,7 +22,7 @@ export class UnifiedGraphMemory extends Graph<Decision> {
   }
 
   /**
-   * Merge a MemoryGraph into this UnifiedMemoryGraph.
+   * Merge a GraphMemory instance into this UnifiedGraphMemory.
    */
   public merge(graph: GraphMemory) {
     const sequence = graph.replay();

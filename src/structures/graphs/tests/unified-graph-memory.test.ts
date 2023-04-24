@@ -1,6 +1,6 @@
 import { GraphMemory, UnifiedGraphMemory } from "..";
 
-describe("UnifiedMemoryGraph", () => {
+describe("UnifiedGraphMemory", () => {
   function makeUnifiedGraphMemory() {
     const unified = new UnifiedGraphMemory();
 
