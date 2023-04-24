@@ -1,7 +1,7 @@
-class Node<Value> {
+export class LinkedListNode<Value> {
   value: Value;
-  next: Node<Value> | null;
-  previous: Node<Value> | null;
+  next: LinkedListNode<Value> | null;
+  previous: LinkedListNode<Value> | null;
 
   constructor(value: Value) {
     this.value = value;
@@ -16,8 +16,8 @@ class Node<Value> {
  * finding a value in the list.
  */
 export class LinkedList<Value> {
-  protected head: Node<Value> | null;
-  protected tail: Node<Value> | null;
+  protected head: LinkedListNode<Value> | null;
+  protected tail: LinkedListNode<Value> | null;
   private size: number;
 
   constructor() {
@@ -31,7 +31,7 @@ export class LinkedList<Value> {
   }
 
   public add(value: Value) {
-    const node = new Node(value);
+    const node = new LinkedListNode(value);
 
     if (this.head === null) {
       this.head = node;
@@ -54,11 +54,11 @@ export class LinkedList<Value> {
     }
   }
 
-  public find(value: Value) {
+  public find(predicate: (value: Value) => boolean) {
     let current = this.head;
 
     while (current !== null) {
-      if (current.value === value) {
+      if (predicate(current.value)) {
         return current;
       }
 
