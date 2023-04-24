@@ -1,13 +1,8 @@
-import { SourceValue } from "../../types";
+import { Decision, SourceValue } from "../../types";
 import { throwError } from "../../utils";
-import { Node, Graph } from "./graph";
+import { GraphNode, Graph } from "./graph";
 
-export interface Decision {
-  key: string;
-  value: SourceValue;
-}
-
-export type MemoryGraphNode = Node<Decision>;
+export type MemoryGraphNode = GraphNode<Decision>;
 
 /**
  * MemoryGraph is a graph that tracks decisions made during an execution cycle.
@@ -40,7 +35,7 @@ export class MemoryGraph extends Graph<Decision> {
       );
     }
 
-    const node = new Node({ key: decision, value });
+    const node = new GraphNode({ key: decision, value });
     this.current.children.push(node);
     this.current = node;
     this.length++;
