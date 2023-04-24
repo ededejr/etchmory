@@ -24,17 +24,17 @@ describe("LinkedList", () => {
   });
 
   test("should find a value in the list", () => {
-    const node = list.find(3);
+    const node = list.find((v) => v === 3);
     expect(node!.value).toBe(3);
   });
 
   test("should return null if the value is not found", () => {
-    const node = list.find(6);
+    const node = list.find((v) => v === 6);
     expect(node).toBeNull();
   });
 
   test("preserves links of the list", () => {
-    const node = list.find(3);
+    const node = list.find((v) => v === 3);
     expect(node!.value).toBe(3);
     expect(node!.previous!.value).toBe(2);
     expect(node!.next!.value).toBe(4);
