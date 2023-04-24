@@ -1,23 +1,23 @@
-export class Node<Value> {
+export class GraphNode<Value> {
   constructor(public value: Value) {}
-  public children: Node<Value>[] = [];
+  public children: GraphNode<Value>[] = [];
 }
 
 export class Graph<Value> {
-  protected root: Node<Value>;
+  protected root: GraphNode<Value>;
 
   constructor() {
-    this.root = new Node(null);
+    this.root = new GraphNode(null);
   }
 
-  protected find(predicate: (node: Node<Value>) => boolean) {
+  protected find(predicate: (node: GraphNode<Value>) => boolean) {
     return this.search(this.root, predicate);
   }
 
   protected search(
-    node: Node<Value>,
-    predicate: (node: Node<Value>) => boolean
-  ): Node<Value> | null {
+    node: GraphNode<Value>,
+    predicate: (node: GraphNode<Value>) => boolean
+  ): GraphNode<Value> | null {
     if (predicate(node)) {
       return node;
     }
@@ -32,7 +32,10 @@ export class Graph<Value> {
     return null;
   }
 
-  protected traverse(node: Node<Value>, callback: (node: Node<Value>) => void) {
+  protected traverse(
+    node: GraphNode<Value>,
+    callback: (node: GraphNode<Value>) => void
+  ) {
     callback(node);
     node.children.forEach((child) => this.traverse(child, callback));
   }

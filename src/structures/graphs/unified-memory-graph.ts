@@ -1,7 +1,8 @@
 import { MemoryGraph } from ".";
+import { Decision } from "../../types";
 import { throwError } from "../../utils";
-import { Graph, Node } from "./graph";
-import { Decision, MemoryGraphNode } from "./memory-graph";
+import { Graph, GraphNode } from "./graph";
+import { MemoryGraphNode } from "./memory-graph";
 
 /**
  * Combines multiple MemoryGraphs into a single graph where all decisions
@@ -44,7 +45,7 @@ export class UnifiedMemoryGraph extends Graph<Decision> {
       if (existing) {
         current = existing;
       } else {
-        const node = new Node(decision);
+        const node = new GraphNode(decision);
         current.children.push(node);
         current = node;
       }
@@ -99,7 +100,7 @@ export class UnifiedMemoryGraph extends Graph<Decision> {
     const parsed: UnifiedMemoryGraphJSON = JSON.parse(json);
 
     const loadNode = (mgn: MemoryGraphNode) => {
-      const node = new Node(mgn.value);
+      const node = new GraphNode(mgn.value);
       node.children = node.children.map((child) => loadNode(child));
       return node;
     };
@@ -110,5 +111,5 @@ export class UnifiedMemoryGraph extends Graph<Decision> {
 }
 
 interface UnifiedMemoryGraphJSON {
-  [key: string]: Node<Decision>;
+  [key: string]: GraphNode<Decision>;
 }
