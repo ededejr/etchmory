@@ -1,5 +1,5 @@
-import { SourceValue } from "../types";
-import { throwError } from "../utils";
+import { SourceValue } from "../../types";
+import { throwError } from "../../utils";
 import { Node, Graph } from "./graph";
 
 export interface Decision {

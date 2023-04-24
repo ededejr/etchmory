@@ -1,5 +1,5 @@
-import { MemoryGraph } from "../graphs";
-import { throwError } from "../utils";
+import { MemoryGraph } from ".";
+import { throwError } from "../../utils";
 import { Graph, Node } from "./graph";
 import { Decision, MemoryGraphNode } from "./memory-graph";
 
