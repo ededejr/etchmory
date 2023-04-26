@@ -6,12 +6,14 @@
   "scripts": {
     "build": "tsc",
     "lint": "prettier --check .",
-    "package:build": "tsup --format cjs,esm && npm run package:prepare",
-    "package:prepare": "ts-node ./scripts/prepare-package-dist.ts",
+    "package:build": "tsup --format cjs,esm --dts && npm run package:prepare",
+    "package:prepare": "npm run scripts:run prepare-dist",
+    "package:benchmark": "npm run scripts:run benchmark",
     "release": "release-it",
     "release:minor": "release-it --minor",
     "release:major": "release-it --major",
     "release:patch": "release-it --patch",
+    "scripts:run": "ts-node ./scripts/index.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch"
