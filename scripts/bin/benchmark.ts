@@ -159,7 +159,7 @@ async function run() {
     }
   }
 
-  const cycles = [10, 100, 1000, 10000, 100000];
+  const cycles = [1, 10, 100, 1000, 10000, 100000];
 
   async function performMarkBenchmark() {
     return await performMemoryObjectBenchmark({
@@ -218,10 +218,28 @@ async function run() {
     });
   }
 
+  async function performGetTokenBenchmark() {
+    return await performMemoryObjectBenchmark({
+      tag: "getToken",
+      cycles,
+      beforeAll: ({ reset, get }) => {
+        const memory = get();
+        for (let i = 0; i < 1000; i++) {
+          memory.mark(makeString(), makeString());
+        }
+        memory.complete();
+      },
+      run: (m) => {
+        m.getToken();
+      },
+    });
+  }
+
   await Promise.all([
     performMarkBenchmark(),
     performRecallBenchmark(),
     performReplayBenchmark(),
+    performGetTokenBenchmark(),
   ]);
 }
 
