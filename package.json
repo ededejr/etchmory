@@ -4,11 +4,10 @@
   "description": "utilities for repeatable execution cycles",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
     "lint": "prettier --check .",
+    "package:benchmark": "npm run scripts:run benchmark",
     "package:build": "tsup --format cjs,esm --dts && npm run package:prepare",
     "package:prepare": "npm run scripts:run prepare-dist",
-    "package:benchmark": "npm run scripts:run benchmark",
     "release": "release-it",
     "release:minor": "release-it --minor",
     "release:major": "release-it --major",
