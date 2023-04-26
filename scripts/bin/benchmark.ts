@@ -198,7 +198,31 @@ async function run() {
     });
   }
 
-  await Promise.all([performMarkBenchmark(), performRecallBenchmark()]);
+  async function performReplayBenchmark() {
+    return await performMemoryObjectBenchmark({
+      tag: "replay",
+      cycles,
+      beforeAll: ({ reset, get }) => {
+        const memory = get();
+        for (let i = 0; i < 1000; i++) {
+          memory.mark(makeString(), makeString());
+        }
+        memory.complete();
+      },
+      run: (m) => {
+        const sequence = m.replay();
+        while (sequence.next().done === false) {
+          // noop
+        }
+      },
+    });
+  }
+
+  await Promise.all([
+    performMarkBenchmark(),
+    performRecallBenchmark(),
+    performReplayBenchmark(),
+  ]);
 }
 
 function makeString() {
