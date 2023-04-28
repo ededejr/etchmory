@@ -106,6 +106,13 @@ export function testMemoryObjectCompliance(
           m.mark("decision_2", "value");
           expect(m.size).toBe(2);
         });
+
+        test("prevents multiple decisions with the same key", () => {
+          m.mark("decision", "value");
+          expect(() => m.mark("decision", "value_2")).toThrowError(
+            'Decision "decision" already exists'
+          );
+        });
       });
 
       describe("recall", () => {

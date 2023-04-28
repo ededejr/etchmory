@@ -8,6 +8,7 @@
  * both interfaces.
  */
 import { Decision, SourceValue } from "../../types";
+import { throwError } from "../../utils";
 import { MemoryObject } from "../memory/memory-object";
 import { GraphNode, Graph } from "./graph";
 
@@ -93,6 +94,7 @@ class MemoryGraph extends Graph<Decision> {
  * made during the execution cycle.
  */
 export class GraphMemory extends MemoryObject {
+  private decisions: Set<string> = new Set();
   private graph = new MemoryGraph();
 
   public get size() {
@@ -101,7 +103,11 @@ export class GraphMemory extends MemoryObject {
 
   public mark(decision: string, value: SourceValue) {
     this.ensureIsActive();
+    if (this.decisions.has(decision)) {
+      throwError(new Error(`Decision "${decision}" already exists`));
+    }
     this.graph.mark(decision, value);
+    this.decisions.add(decision);
   }
 
   public recall(decision: string) {
