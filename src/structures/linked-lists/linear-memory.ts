@@ -1,8 +1,11 @@
 import { Decision, SourceValue } from "../../types";
-import { throwError } from "../../utils";
 import { MemoryObject } from "../memory/memory-object";
 import { LinkedList } from "./linked-list";
 
+/**
+ * A linear memory is a `MemoryObject` that stores decisions
+ * using a linked list.
+ */
 export class LinearMemory extends MemoryObject {
   private memory = new LinkedList<Decision>();
 
