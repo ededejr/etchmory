@@ -1,6 +1,8 @@
+import * as fs from "fs";
+import * as path from "path";
 import type { Script } from "../runner";
 import { PerformanceObserver, performance } from "perf_hooks";
-import { ensureDistExists, getDistDir } from "../utils";
+import { ensureDistExists, getDistDir, getRootDir, writeToFS } from "../utils";
 
 const obs = new PerformanceObserver((items: { getEntries: () => any[] }) => {
   const results = {
@@ -64,6 +66,26 @@ const obs = new PerformanceObserver((items: { getEntries: () => any[] }) => {
 
   const linearResults = formatResults(results.linear);
   const graphResults = formatResults(results.graph);
+
+  const jsonResults = JSON.stringify(
+    { linearResults, graphResults },
+    (key, value) => {
+      // Rewrite the duration values to be numbers instead of strings
+      if (typeof value === "string" && value.endsWith("ms")) {
+        return parseFloat(value.replace("ms", ""));
+      }
+
+      return value;
+    },
+    2
+  );
+
+  try {
+    writeToFS("benchmark.json", jsonResults);
+  } catch (error) {
+    console.error("Failed to write benchmark results");
+    console.error(error);
+  }
 
   console.log("\nBenchmark Results\n");
   console.log("LinearMemory");

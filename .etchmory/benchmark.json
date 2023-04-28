@@ -1,0 +1,66 @@
+{
+  "linearResults": {
+    "x1": {
+      "mark": 0.37,
+      "recall": 0.23,
+      "replay": 2.17
+    },
+    "x10": {
+      "mark": 0.39,
+      "recall": 1.11,
+      "replay": 2.54
+    },
+    "x100": {
+      "mark": 1.53,
+      "recall": 4.6,
+      "replay": 19
+    },
+    "x1000": {
+      "mark": 14.12,
+      "recall": 39.9,
+      "replay": 119.23
+    },
+    "x10000": {
+      "mark": 150.33,
+      "recall": 286.71,
+      "replay": 1244.43
+    },
+    "x100000": {
+      "mark": 1456.52,
+      "recall": 3127.35,
+      "replay": 12222.21
+    }
+  },
+  "graphResults": {
+    "x1": {
+      "mark": 0.08,
+      "recall": 0.3,
+      "replay": 0.48
+    },
+    "x10": {
+      "mark": 0.19,
+      "recall": 1.76,
+      "replay": 0.84
+    },
+    "x100": {
+      "mark": 0.26,
+      "recall": 1.65,
+      "replay": 3.73
+    },
+    "x1000": {
+      "mark": 2.42,
+      "recall": 17.96,
+      "replay": 31.6
+    },
+    "x10000": {
+      "mark": 22.58,
+      "recall": 139.15,
+      "replay": 324.12
+    },
+    "x100000": {
+      "mark": 193.71,
+      "recall": 1438.65,
+      "replay": 3206.38
+    }
+  }
+}
