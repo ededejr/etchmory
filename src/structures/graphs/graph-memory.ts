@@ -94,7 +94,6 @@ class MemoryGraph extends Graph<Decision> {
  * made during the execution cycle.
  */
 export class GraphMemory extends MemoryObject {
-  private decisions: Set<string> = new Set();
   private graph = new MemoryGraph();
 
   public get size() {
@@ -103,11 +102,8 @@ export class GraphMemory extends MemoryObject {
 
   public mark(decision: string, value: SourceValue) {
     this.ensureIsActive();
-    if (this.decisions.has(decision)) {
-      throwError(new Error(`Decision "${decision}" already exists`));
-    }
+    this.validateDecision(decision);
     this.graph.mark(decision, value);
-    this.decisions.add(decision);
   }
 
   public recall(decision: string) {
@@ -119,8 +115,6 @@ export class GraphMemory extends MemoryObject {
     this.ensureIsComplete();
     return this.graph.replay();
   }
-
-  protected onCompletion(): void {}
 
   protected generateToken(): string {
     return `gm::${this.graph.toJSON()}`;

@@ -4,7 +4,6 @@ import { MemoryObject } from "../memory/memory-object";
 import { LinkedList } from "./linked-list";
 
 export class LinearMemory extends MemoryObject {
-  private decisions: Set<string> = new Set();
   private memory = new LinkedList<Decision>();
 
   get size() {
@@ -13,12 +12,8 @@ export class LinearMemory extends MemoryObject {
 
   public mark(decision: string, value: SourceValue) {
     this.ensureIsActive();
-
-    if (this.decisions.has(decision)) {
-      throwError(new Error(`Decision "${decision}" already exists`));
-    }
+    this.validateDecision(decision);
     this.memory.add({ key: decision, value });
-    this.decisions.add(decision);
   }
 
   public recall(decision: string) {
@@ -51,9 +46,5 @@ export class LinearMemory extends MemoryObject {
     });
 
     return token.join(":");
-  }
-
-  protected onCompletion() {
-    this.decisions.clear();
   }
 }

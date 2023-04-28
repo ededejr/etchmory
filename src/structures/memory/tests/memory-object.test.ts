@@ -1,7 +1,6 @@
 import { MemoryObject } from "../memory-object";
 
 describe("MemoryObject", () => {
-  let onCompletionMock: jest.Mock;
   let generateTokenMock: jest.Mock;
   let m: TestableMemoryObject;
 
@@ -27,21 +26,11 @@ describe("MemoryObject", () => {
     public replay() {
       return {} as any;
     }
-    protected onCompletion() {
-      onCompletionMock();
-    }
   }
 
   beforeEach(() => {
-    onCompletionMock = jest.fn();
     generateTokenMock = jest.fn();
     m = new TestableMemoryObject();
-  });
-
-  test("calls onCompletion when complete is called", () => {
-    m.mark();
-    m.complete();
-    expect(onCompletionMock).toHaveBeenCalled();
   });
 
   test("calls generateToken when getToken is called", () => {

@@ -10,7 +10,8 @@ import { throwError } from "../../utils";
  *
  */
 export abstract class MemoryObject {
-  protected isActive = true;
+  private decisions: Record<string, boolean> = {};
+  private isActive = true;
   public abstract readonly size: number;
 
   /**
@@ -44,9 +45,7 @@ export abstract class MemoryObject {
     }
 
     this.isActive = false;
-    if (this.onCompletion) {
-      this.onCompletion();
-    }
+    this.decisions = {};
   }
 
   /**
@@ -61,13 +60,6 @@ export abstract class MemoryObject {
    * Construct a token from the decisions made during an execution cycle.
    */
   protected abstract generateToken(): string;
-
-  /**
-   * A callback which is invoked when the current execution cycle is complete.
-   * This is useful for cleaning up any resources which are no longer needed.
-   * This is invoked before transitioning the `isActive` state.
-   */
-  protected abstract onCompletion(): void;
 
   protected ensureIsComplete() {
     if (this.isActive) {
@@ -87,5 +79,16 @@ export abstract class MemoryObject {
         )
       );
     }
+  }
+
+  /**
+   * Validate a decision before insertion.
+   * This should ideally be called within `mark`.
+   */
+  protected validateDecision(decision: string) {
+    if (this.decisions[decision]) {
+      throwError(new Error(`Decision "${decision}" already exists`));
+    }
+    this.decisions[decision] = true;
   }
 }
