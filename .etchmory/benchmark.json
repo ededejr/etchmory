@@ -1,66 +1,79 @@
 {
   "linearResults": {
     "x1": {
-      "mark": 0.37,
-      "recall": 0.23,
-      "replay": 2.17
+      "mark": 0.4,
+      "recall": 1.01,
+      "replay": 0.72,
+      "getToken": 1.21
     },
     "x10": {
-      "mark": 0.39,
-      "recall": 1.11,
-      "replay": 2.54
+      "mark": 0.33,
+      "recall": 0.66,
+      "replay": 1.99,
+      "getToken": 3.17
     },
     "x100": {
-      "mark": 1.53,
-      "recall": 4.6,
-      "replay": 19
+      "mark": 6.96,
+      "recall": 3.81,
+      "replay": 15.3,
+      "getToken": 21.88
     },
     "x1000": {
-      "mark": 14.12,
-      "recall": 39.9,
-      "replay": 119.23
+      "mark": 14.85,
+      "recall": 32.93,
+      "replay": 125.54,
+      "getToken": 199.33
     },
     "x10000": {
-      "mark": 150.33,
-      "recall": 286.71,
-      "replay": 1244.43
+      "mark": 135.66,
+      "recall": 301.84,
+      "replay": 1019.39,
+      "getToken": 1849.47
     },
     "x100000": {
-      "mark": 1456.52,
-      "recall": 3127.35,
-      "replay": 12222.21
+      "mark": 1380.25,
+      "recall": 2959.95,
+      "replay": 11987.33,
+      "getToken": 17482.86
     }
   },
   "graphResults": {
     "x1": {
       "mark": 0.08,
-      "recall": 0.3,
-      "replay": 0.48
+      "recall": 0.66,
+      "replay": 0.56,
+      "getToken": 3.12
     },
     "x10": {
-      "mark": 0.19,
-      "recall": 1.76,
-      "replay": 0.84
+      "mark": 0.15,
+      "recall": 0.76,
+      "replay": 0.78,
+      "getToken": 21.54
     },
     "x100": {
-      "mark": 0.26,
-      "recall": 1.65,
-      "replay": 3.73
+      "mark": 0.23,
+      "recall": 1.59,
+      "replay": 8.29,
+      "getToken": 222.8
     },
     "x1000": {
-      "mark": 2.42,
-      "recall": 17.96,
-      "replay": 31.6
+      "mark": 2.21,
+      "recall": 15.01,
+      "replay": 32.92,
+      "getToken": 2115.35
     },
     "x10000": {
-      "mark": 22.58,
-      "recall": 139.15,
-      "replay": 324.12
+      "mark": 21.61,
+      "recall": 141.78,
+      "replay": 346.99,
+      "getToken": 21144.1
     },
     "x100000": {
-      "mark": 193.71,
-      "recall": 1438.65,
-      "replay": 3206.38
+      "mark": 228.3,
+      "recall": 1484.79,
+      "replay": 3206.48,
+      "getToken": 210414.19
     }
-  }
+  },
+  "sha": "481e2d25"
 }

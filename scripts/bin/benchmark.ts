@@ -1,8 +1,32 @@
-import * as fs from "fs";
-import * as path from "path";
 import type { Script } from "../runner";
 import { PerformanceObserver, performance } from "perf_hooks";
-import { ensureDistExists, getDistDir, getRootDir, writeToFS } from "../utils";
+import {
+  ensureDistExists,
+  getDistDir,
+  writeToFS,
+  readFromFS,
+  getLatestCommitSha,
+} from "../utils";
+
+const BENCHMARK_FILE = "benchmark.json";
+
+function retrievePreviousBenchmarkResults() {
+  try {
+    return readFromFS(BENCHMARK_FILE);
+  } catch (error) {
+    console.error("Failed to read previous benchmark results", error);
+    return null;
+  }
+}
+
+function saveBenchmarkResults(results: string) {
+  try {
+    writeToFS(BENCHMARK_FILE, results);
+  } catch (error) {
+    console.error("Failed to write benchmark results");
+    console.error(error);
+  }
+}
 
 const obs = new PerformanceObserver((items: { getEntries: () => any[] }) => {
   const results = {
@@ -64,11 +88,12 @@ const obs = new PerformanceObserver((items: { getEntries: () => any[] }) => {
     return table;
   };
 
+  const sha = getLatestCommitSha();
   const linearResults = formatResults(results.linear);
   const graphResults = formatResults(results.graph);
 
   const jsonResults = JSON.stringify(
-    { linearResults, graphResults },
+    { sha, linearResults, graphResults },
     (key, value) => {
       // Rewrite the duration values to be numbers instead of strings
       if (typeof value === "string" && value.endsWith("ms")) {
@@ -80,12 +105,7 @@ const obs = new PerformanceObserver((items: { getEntries: () => any[] }) => {
     2
   );
 
-  try {
-    writeToFS("benchmark.json", jsonResults);
-  } catch (error) {
-    console.error("Failed to write benchmark results");
-    console.error(error);
-  }
+  saveBenchmarkResults(jsonResults);
 
   console.log("\nBenchmark Results\n");
   console.log("LinearMemory");
